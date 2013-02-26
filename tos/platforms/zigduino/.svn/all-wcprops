@@ -1,0 +1,173 @@
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/22/trunk/tinyos-2.x-contrib/tos/platforms/zigduino
+END
+RadioConfig.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/16/trunk/tinyos-2.x-contrib/tos/platforms/zigduino/RadioConfig.h
+END
+platform.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/13/trunk/tinyos-2.x-contrib/tos/platforms/zigduino/platform.h
+END
+RCCalibrate.nc
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/13/trunk/tinyos-2.x-contrib/tos/platforms/zigduino/RCCalibrate.nc
+END
+platform_message.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/13/trunk/tinyos-2.x-contrib/tos/platforms/zigduino/platform_message.h
+END
+ZigduinoDigitalPortsC.nc
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/!svn/ver/16/trunk/tinyos-2.x-contrib/tos/platforms/zigduino/ZigduinoDigitalPortsC.nc
+END
+DemoSensorC.nc
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/13/trunk/tinyos-2.x-contrib/tos/platforms/zigduino/DemoSensorC.nc
+END
+ZigduinoAnalogPortsP.nc
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/16/trunk/tinyos-2.x-contrib/tos/platforms/zigduino/ZigduinoAnalogPortsP.nc
+END
+ActiveMessageC.nc
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/13/trunk/tinyos-2.x-contrib/tos/platforms/zigduino/ActiveMessageC.nc
+END
+hardware.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/13/trunk/tinyos-2.x-contrib/tos/platforms/zigduino/hardware.h
+END
+ZigduinoUnusedPinsP.nc
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/!svn/ver/16/trunk/tinyos-2.x-contrib/tos/platforms/zigduino/ZigduinoUnusedPinsP.nc
+END
+PlatformC.nc
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/16/trunk/tinyos-2.x-contrib/tos/platforms/zigduino/PlatformC.nc
+END
+Leds.nc
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/13/trunk/tinyos-2.x-contrib/tos/platforms/zigduino/Leds.nc
+END
+NoLedsC.nc
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/13/trunk/tinyos-2.x-contrib/tos/platforms/zigduino/NoLedsC.nc
+END
+PlatformSerialC.nc
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/13/trunk/tinyos-2.x-contrib/tos/platforms/zigduino/PlatformSerialC.nc
+END
+LedsC.nc
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/16/trunk/tinyos-2.x-contrib/tos/platforms/zigduino/LedsC.nc
+END
+RCCalibrateP.nc
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/13/trunk/tinyos-2.x-contrib/tos/platforms/zigduino/RCCalibrateP.nc
+END
+DemoSensorStreamC.nc
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/13/trunk/tinyos-2.x-contrib/tos/platforms/zigduino/DemoSensorStreamC.nc
+END
+ZigduinoDigitalPortsP.nc
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/!svn/ver/16/trunk/tinyos-2.x-contrib/tos/platforms/zigduino/ZigduinoDigitalPortsP.nc
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/13/trunk/tinyos-2.x-contrib/tos/platforms/zigduino/README
+END
+PlatformLedsC.nc
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/16/trunk/tinyos-2.x-contrib/tos/platforms/zigduino/PlatformLedsC.nc
+END
+I2CBusPowerManagerC.nc
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/!svn/ver/13/trunk/tinyos-2.x-contrib/tos/platforms/zigduino/I2CBusPowerManagerC.nc
+END
+TimeSyncMessageC.nc
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/!svn/ver/13/trunk/tinyos-2.x-contrib/tos/platforms/zigduino/TimeSyncMessageC.nc
+END
+.platform
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/16/trunk/tinyos-2.x-contrib/tos/platforms/zigduino/.platform
+END
+PlatformP.nc
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/16/trunk/tinyos-2.x-contrib/tos/platforms/zigduino/PlatformP.nc
+END
+DemoSensorNowC.nc
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/13/trunk/tinyos-2.x-contrib/tos/platforms/zigduino/DemoSensorNowC.nc
+END
+ZigduinoAnalogPortsC.nc
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/16/trunk/tinyos-2.x-contrib/tos/platforms/zigduino/ZigduinoAnalogPortsC.nc
+END
+LedsP.nc
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/16/trunk/tinyos-2.x-contrib/tos/platforms/zigduino/LedsP.nc
+END
+KeepMcuIdleP.nc
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/16/trunk/tinyos-2.x-contrib/tos/platforms/zigduino/KeepMcuIdleP.nc
+END
