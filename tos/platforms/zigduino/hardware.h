@@ -49,9 +49,9 @@ enum {
 	TOS_SLEEP_NONE = ATM128_POWER_IDLE, 
 }; 
  
-//#ifndef PLATFORM_BAUDRATE 
-#define PLATFORM_BAUDRATE 57600L //115200L
-//#endif
+#ifndef PLATFORM_BAUDRATE 
+#define PLATFORM_BAUDRATE 115200L
+#endif
 
 // we have no external pullups
 #define ATM128_I2C_EXTERNAL_PULLDOWN TRUE
