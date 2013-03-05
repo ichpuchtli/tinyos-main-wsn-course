@@ -50,7 +50,7 @@ implementation
 {
   //initialization
   components PlatformP, McuInitC, MeasureClockC;
-  components KeepMcuIdleP, McuSleepC ;
+  components McuSleepC ;
   components ZigduinoDigitalPortsC ,ZigduinoAnalogPortsC, ZigduinoUnusedPinsP ;
   Init = PlatformP;
   LedsInit = PlatformP.LedsInit;
@@ -59,6 +59,4 @@ implementation
   PlatformP.ZigduinoAnalogInit -> ZigduinoAnalogPortsC ;
   PlatformP.ZigduinoUnusedInit -> ZigduinoUnusedPinsP ;
   Atm128Calibrate = MeasureClockC;
-
-  KeepMcuIdleP.McuPowerOverride <- McuSleepC ; // use IDLE as the lowest state for zigduino, otherwise the timer stops running
 }
