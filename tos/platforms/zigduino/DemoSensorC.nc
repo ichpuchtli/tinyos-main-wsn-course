@@ -36,7 +36,7 @@ generic configuration DemoSensorC() {
   provides interface Read<uint16_t>;
 }
 implementation {
-  components new AtmegaVoltageC() as Sensor;
-  //components new AtmegaTemperatureC() as Sensor;
+  components new VoltageC() as Sensor;
+  //components new TempC() as Sensor;
   Read = Sensor.Read;
 }

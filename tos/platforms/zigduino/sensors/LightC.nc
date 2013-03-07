@@ -1,6 +1,6 @@
 
 
-generic configuration LightSensorC() {
+generic configuration LightC() {
   provides interface Read<uint16_t>;
 }
 implementation {
