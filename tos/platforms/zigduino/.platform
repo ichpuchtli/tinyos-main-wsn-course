@@ -22,6 +22,7 @@
   %T/lib/rfxlink/layers
   %T/lib/rfxlink/util
   %T/lib/diagmsg
+  %P/sensors
 
   ) );
 
