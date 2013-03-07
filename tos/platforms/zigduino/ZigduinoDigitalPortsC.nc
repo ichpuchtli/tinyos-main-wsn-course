@@ -29,12 +29,12 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * Author: Ugo Colesanti <colesanti@dis.uniroma1.it>
- *
+ * Philipp Sommer <philipp.sommer@csiro.au>
  */
 
 configuration ZigduinoDigitalPortsC {
-  provides interface GeneralIO as Digital0 ; // warning: used with ft232rl
-  provides interface GeneralIO as Digital1 ; // warning: used with ft232rl
+  provides interface GeneralIO as Digital0 ;
+  provides interface GeneralIO as Digital1 ;
   provides interface GeneralIO as Digital2 ;
   provides interface GeneralIO as Digital3 ;
   provides interface GeneralIO as Digital4 ;
@@ -44,9 +44,18 @@ configuration ZigduinoDigitalPortsC {
   provides interface GeneralIO as Digital8 ;
   provides interface GeneralIO as Digital9 ;
   provides interface GeneralIO as Digital10 ;
-//  provides interface GeneralIO as Digital11 ;
+  provides interface GeneralIO as Digital11 ;
   provides interface GeneralIO as Digital12 ;
-//  provides interface GeneralIO as Digital13 ;
+  provides interface GeneralIO as Digital13 ;
+
+  provides interface GpioInterrupt as Interrupt0;
+  provides interface GpioInterrupt as Interrupt1;
+  provides interface GpioInterrupt as Interrupt2;
+  provides interface GpioInterrupt as Interrupt3;
+  // digital pins 4 and 5 do not support interrupts
+  provides interface GpioInterrupt as Interrupt6;
+  provides interface GpioInterrupt as Interrupt7;
+
 
   provides interface Init ;
 
@@ -54,12 +63,13 @@ configuration ZigduinoDigitalPortsC {
 }
 implementation {
   components AtmegaGeneralIOC as IO;
-  components ZigduinoDigitalPortsP ;
+  components ZigduinoDigitalPortsP;
+  components AtmegaExtInterruptC;
 
   Init = ZigduinoDigitalPortsP ;
 
-  Digital0 = IO.PortE0 ;
-  Digital1 = IO.PortE1 ;
+  Digital0 = IO.PortD2 ;
+  Digital1 = IO.PortD3 ;
   Digital2 = IO.PortE6 ;
   Digital3 = IO.PortE5 ;
   Digital4 = IO.PortE2 ;
@@ -69,5 +79,15 @@ implementation {
   Digital8 = IO.PortB4 ;
   Digital9 = IO.PortB7 ;
   Digital10 = IO.PortB6 ;
+  Digital11 = IO.PortB2 ;
   Digital12 = IO.PortB3 ;
+  Digital13 = IO.PortB1 ;
+
+  Interrupt0 = AtmegaExtInterruptC.GpioInterrupt[2]; // INT2
+  Interrupt1 = AtmegaExtInterruptC.GpioInterrupt[3]; // INT3
+  Interrupt2 = AtmegaExtInterruptC.GpioInterrupt[6]; // INT6
+  Interrupt3 = AtmegaExtInterruptC.GpioInterrupt[5]; // INT5
+  Interrupt6 = AtmegaExtInterruptC.GpioInterrupt[4]; // INT4
+  Interrupt7 = AtmegaExtInterruptC.GpioInterrupt[7]; // INT7
+
 }

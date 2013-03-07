@@ -29,30 +29,30 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * Author: Ugo Colesanti <colesanti@dis.uniroma1.it>
- *
+ * Philipp Sommer <philipp.sommer@csiro.au>
  */
 
 configuration ZigduinoAnalogPortsC {
-  provides interface GeneralIO as Analog0 ;
-  provides interface GeneralIO as Analog1 ;
-  provides interface GeneralIO as Analog2 ;
-  provides interface GeneralIO as Analog3 ;
-  provides interface GeneralIO as Analog4 ;
-  provides interface GeneralIO as Analog5 ;
 
+
+  provides interface Atm128AdcConfig as Analog0;
+  provides interface Atm128AdcConfig as Analog1;
+  provides interface Atm128AdcConfig as Analog2;
+  provides interface Atm128AdcConfig as Analog3;
+  provides interface Atm128AdcConfig as Analog4;
+  provides interface Atm128AdcConfig as Analog5;
 
   provides interface Init ;
 }
 implementation {
-	components AtmegaGeneralIOC as IO;
 	components ZigduinoAnalogPortsP ;
 
 	Init = ZigduinoAnalogPortsP ;
 
-	Analog0 = IO.PortF0 ;
-	Analog1 = IO.PortF1 ;
-	Analog2 = IO.PortF2 ;
-	Analog3 = IO.PortF3 ;
-	Analog4 = IO.PortF4 ;
-	Analog5 = IO.PortF5 ;
+	Analog0 = ZigduinoAnalogPortsP.Atm128AdcConfig0;
+	Analog1 = ZigduinoAnalogPortsP.Atm128AdcConfig1;
+	Analog2 = ZigduinoAnalogPortsP.Atm128AdcConfig2;
+	Analog3 = ZigduinoAnalogPortsP.Atm128AdcConfig3;
+	Analog4 = ZigduinoAnalogPortsP.Atm128AdcConfig4;
+	Analog5 = ZigduinoAnalogPortsP.Atm128AdcConfig5;
 }

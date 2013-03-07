@@ -42,7 +42,7 @@ implementation {
 	    atomic {
 	      dbg("Init", "ZigduinoDigitalPorts: initialized.\n");
 	      DDRE |= 0xff; PORTE &= ~0xff ;
-	      DDRB |= 0xd8; PORTB &= ~0xd8 ;
+	      DDRB |= 0xff; PORTB &= ~0xff ;
 	    }
 	    return SUCCESS;
 	  }

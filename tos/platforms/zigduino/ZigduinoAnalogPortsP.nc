@@ -29,20 +29,127 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * Author: Ugo Colesanti <colesanti@dis.uniroma1.it>
- *
+ * Philipp Sommer <philipp.sommer@csiro.au>
  */
 
 module ZigduinoAnalogPortsP{
   provides {
     interface Init;
+    interface Atm128AdcConfig as Atm128AdcConfig0;
+    interface Atm128AdcConfig as Atm128AdcConfig1;
+    interface Atm128AdcConfig as Atm128AdcConfig2;
+    interface Atm128AdcConfig as Atm128AdcConfig3;
+    interface Atm128AdcConfig as Atm128AdcConfig4;
+    interface Atm128AdcConfig as Atm128AdcConfig5;
+
   }
 }
 implementation {
-	command error_t Init.init() {
-	    atomic {
-	      dbg("Init", "ZigduinoAnalogPorts: initialized.\n");
-	      DDRF &= ~0x3f ; PORTF |= 0x3f ;
-	    }
-	    return SUCCESS;
-	  }
+
+  command error_t Init.init() {
+    atomic {
+      dbg("Init", "ZigduinoAnalogPorts: initialized.\n");
+      DDRF &= ~0x3f ; PORTF |= 0x3f;
+    }
+    return SUCCESS;
+  }
+
+  
+  /********* ADC Channel 0 *********/
+  async command uint8_t Atm128AdcConfig0.getChannel()
+  {
+    return ATM128_ADC_SNGL_ADC0;
+  }
+
+  async command uint8_t Atm128AdcConfig0.getRefVoltage()
+  {
+    return ATM128_ADC_VREF_OFF; // external AREF to be connected to 3.3V
+  }
+
+  async command uint8_t Atm128AdcConfig0.getPrescaler()
+  {
+    return ATM128_ADC_PRESCALE;
+  }
+
+  /********* ADC Channel 1 *********/
+  async command uint8_t Atm128AdcConfig1.getChannel()
+  {
+    return ATM128_ADC_SNGL_ADC1;
+  }
+
+  async command uint8_t Atm128AdcConfig1.getRefVoltage()
+  {
+    return ATM128_ADC_VREF_OFF; // external AREF to be connected to 3.3V
+  }
+
+  async command uint8_t Atm128AdcConfig1.getPrescaler()
+  {
+    return ATM128_ADC_PRESCALE;
+  }
+
+  /********* ADC Channel 2 *********/
+  async command uint8_t Atm128AdcConfig2.getChannel()
+  {
+    return ATM128_ADC_SNGL_ADC2;
+  }
+
+  async command uint8_t Atm128AdcConfig2.getRefVoltage()
+  {
+    return ATM128_ADC_VREF_OFF; // external AREF to be connected to 3.3V
+  }
+
+  async command uint8_t Atm128AdcConfig2.getPrescaler()
+  {
+    return ATM128_ADC_PRESCALE;
+  }
+
+  /********* ADC Channel 3 *********/
+  async command uint8_t Atm128AdcConfig3.getChannel()
+  {
+    return ATM128_ADC_SNGL_ADC3;
+  }
+
+  async command uint8_t Atm128AdcConfig3.getRefVoltage()
+  {
+    return ATM128_ADC_VREF_OFF; // external AREF to be connected to 3.3V
+  }
+
+  async command uint8_t Atm128AdcConfig3.getPrescaler()
+  {
+    return ATM128_ADC_PRESCALE;
+  }
+
+  /********* ADC Channel 4 *********/
+  async command uint8_t Atm128AdcConfig4.getChannel()
+  {
+    return ATM128_ADC_SNGL_ADC4;
+  }
+
+  async command uint8_t Atm128AdcConfig4.getRefVoltage()
+  {
+    return ATM128_ADC_VREF_OFF; // external AREF to be connected to 3.3V
+  }
+
+  async command uint8_t Atm128AdcConfig4.getPrescaler()
+  {
+    return ATM128_ADC_PRESCALE;
+  }
+
+  /********* ADC Channel 5 *********/
+  async command uint8_t Atm128AdcConfig5.getChannel()
+  {
+    return ATM128_ADC_SNGL_ADC5;
+  }
+
+  async command uint8_t Atm128AdcConfig5.getRefVoltage()
+  {
+    return ATM128_ADC_VREF_OFF; // external AREF to be connected to 3.3V
+  }
+
+  async command uint8_t Atm128AdcConfig5.getPrescaler()
+  {
+    return ATM128_ADC_PRESCALE;
+  }
+
+
 }
