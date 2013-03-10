@@ -3,9 +3,14 @@ COMPONENT=UDPEchoC
 # BOOTLOADER=tosboot
 
 # radio options
-# CFLAGS += -DCC2420_DEF_CHANNEL=26
-# CFLAGS += -DRF230_DEF_CHANNEL=26
-# CFLAGS += -DCC2420_DEF_RFPOWER=4 -DENABLE_SPI0_DMA
+CFLAGS += -DCC2420_DEF_CHANNEL=13
+CFLAGS += -DRF230_DEF_CHANNEL=13
+CFLAGS += -DCC2420_DEF_RFPOWER=4 -DENABLE_SPI0_DMA
+
+# use hardware ack
+CFLAGS+=-DRF230_HARDWARE_ACK
+CFLAGS+=-DCC2420_HW_ACKNOWLEDGEMENTS
+CFLAGS += -DSOFTWAREACK_TIMEOUT=3000
 
 # enable dma on the radio
 # PFLAGS += -DENABLE_SPI0_DMA
@@ -13,15 +18,15 @@ COMPONENT=UDPEchoC
 # you can compile with or without a routing protocol... of course,
 # without it, you will only be able to use link-local communication.
 PFLAGS += -DRPL_ROUTING -DRPL_STORING_MODE -I$(TOSDIR)/lib/net/rpl
-# PFLAGS += -DRPL_OF_MRHOF 
+# PFLAGS += -DRPL_OF_MRHOF
 
 # tell the 6lowpan layer to not generate hc-compressed headers
-# PFLAGS += -DLIB6LOWPAN_HC_VERSION=-1
+#PFLAGS += -DLIB6LOWPAN_HC_VERSION=-1
 
 # if this is set, motes will send debugging information to the address
 # listed.  BLIP_STATS causes blip to record statistics.
 # you can log this information using the util/Listener.py script
-# PFLAGS += -DREPORT_DEST=\"fec0::100\" -DBLIP_STATS
+PFLAGS += -DREPORT_DEST=\"fec0::100\" #-DBLIP_STATS -BLIP_STAPS_IP_MEM
 
 # if you're using DHCP, set this to try and derive a 16-bit address
 # from the IA received from the server.  This will work if the server

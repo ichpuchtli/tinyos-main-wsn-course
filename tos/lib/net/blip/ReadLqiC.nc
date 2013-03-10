@@ -25,6 +25,11 @@ configuration ReadLqiC {
   ReadLqi = RF230ReadLqiC;
   RF230ReadLqiC.SubLqi -> RF230Ieee154MessageC.PacketLinkQuality;
   RF230ReadLqiC.SubRssi -> RF230Ieee154MessageC.PacketRSSI;
+#elif defined(PLATFORM_UCMINI) || defined(PLATFORM_UCBASE) || defined(PLATFORM_ZIGDUINO)
+	components RF230ReadLqiC, RFA1Ieee154MessageC;
+	ReadLqi = RF230ReadLqiC;
+	RF230ReadLqiC.SubLqi -> RFA1Ieee154MessageC.PacketLinkQuality;
+	RF230ReadLqiC.SubRssi -> RFA1Ieee154MessageC.PacketRSSI;
 #else
 #error "No radio support is available for your platform"
 #endif

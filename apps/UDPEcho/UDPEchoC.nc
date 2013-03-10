@@ -69,7 +69,12 @@ configuration UDPEchoC {
   components UDPShellC;
 
   // prints the routing table
+#if defined(PLATFORM_IRIS)
+#warning *** RouterCmd disabled for IRIS ***
+#else
   components RouteCmdC;
+#endif
+
 #ifndef  IN6_PREFIX
   components DhcpCmdC;
 #endif
