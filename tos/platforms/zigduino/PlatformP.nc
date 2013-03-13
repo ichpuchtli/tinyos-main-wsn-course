@@ -58,10 +58,6 @@ implementation
   {
     error_t ok;
 
-    //disable jtag
-    MCUCR |= 1<<JTD;
-    MCUCR |= 1<<JTD; 
-
     ok = call McuInit.init();
     ok = ecombine(ok, call ZigduinoDigitalInit.init()) ;
     ok = ecombine(ok, call ZigduinoAnalogInit.init()) ;
