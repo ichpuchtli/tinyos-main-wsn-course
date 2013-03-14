@@ -779,7 +779,7 @@ implementation
 
    async command mcu_power_t McuPowerOverride.lowestState()
    {
-      if( (IRQ_MASK & 1<<AWAKE_EN) != 0 )
+      if( ((IRQ_MASK & 1<<AWAKE_EN) != 0) || (cmd == CMD_RECEIVE) || (cmd == CMD_TRANSMIT) )
          return ATM128_POWER_EXT_STANDBY;
       else
          return ATM128_POWER_DOWN;
