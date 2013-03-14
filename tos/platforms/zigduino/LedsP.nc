@@ -158,8 +158,6 @@ implementation {
 	      else {
 		call Leds.led2Off();
 	      }
-	      if (val & LEDS_LED3) {
-		}
 	  }
   }
 }
