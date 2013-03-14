@@ -31,7 +31,8 @@
  *
  */
 
-#include <6lowpan.h>
+#include <lib6lowpan/lib6lowpan.h>
+#include "Timer.h"
 
 configuration TCPEchoC {
 
@@ -43,9 +44,9 @@ configuration TCPEchoC {
   TCPEchoP.Leds -> LedsC;
 
   components new TimerMilliC();
-  components IPDispatchC;
+  components IPDispatchC, IPStackC;
 
-  TCPEchoP.RadioControl -> IPDispatchC;
+  TCPEchoP.RadioControl -> IPStackC;
   components new UdpSocketC() as Echo,
     new UdpSocketC() as Status;
   TCPEchoP.Echo -> Echo;
@@ -58,19 +59,53 @@ configuration TCPEchoC {
   HttpdP.Leds -> LedsC;
   HttpdP.Tcp -> TcpWeb;
 
+  components new TimerMilliC() as Timer_delay;
+  HttpdP.Timer_delay -> Timer_delay;
+	
   TCPEchoP.Status -> Status;
 
   TCPEchoP.StatusTimer -> TimerMilliC;
 
   components UdpC;
 
-  TCPEchoP.IPStats -> IPDispatchC.IPStats;
-  TCPEchoP.RouteStats -> IPDispatchC.RouteStats;
-  TCPEchoP.ICMPStats -> IPDispatchC.ICMPStats;
+  TCPEchoP.IPStats -> IPDispatchC;
   TCPEchoP.UDPStats -> UdpC;
 
   components RandomC;
   TCPEchoP.Random -> RandomC;
 
   components UDPShellC;
+
+
+#ifdef RPL_ROUTING
+  components RPLRoutingC;
+#endif
+
+
+  // prints the routing table
+#if defined(PLATFORM_IRIS)
+#warning *** RouterCmd disabled for IRIS ***
+#else
+  components RouteCmdC;
+#endif
+
+#ifndef  IN6_PREFIX
+  components DhcpCmdC;
+#endif
+
+#ifdef PRINTFUART_ENABLED
+  /* This component wires printf directly to the serial port, and does
+   * not use any framing.  You can view the output simply by tailing
+   * the serial device.  Unlike the old printfUART, this allows us to
+   * use PlatformSerialC to provide the serial driver.
+   * 
+   * For instance:
+   * $ stty -F /dev/ttyUSB0 115200
+   * $ tail -f /dev/ttyUSB0
+  */
+  components SerialPrintfC;
+
+#endif
+
+
 }

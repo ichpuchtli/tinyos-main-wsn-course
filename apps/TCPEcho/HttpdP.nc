@@ -1,9 +1,12 @@
+#include "Timer.h"
 
 module HttpdP {
   uses {
     interface Leds;
     interface Boot;
     interface Tcp;
+ 	interface Timer<TMilli> as Timer_delay;
+
   }
 } implementation {
 
@@ -28,7 +31,9 @@ module HttpdP {
     char reply[24];
     memcpy(reply, "led0: 0 led1: 0 led2: 0\n", 24);
 
-    printfUART("request: '%s'\n", request);
+#ifdef PRINTFUART_ENABLED
+    printf("request: '%s'\n", request);
+#endif
 
     if (len >= 10 &&
         request[0] == '/' &&
@@ -49,8 +54,17 @@ module HttpdP {
         call Tcp.send(reply, 24);
       }
     }
-    call Tcp.close();
+     //Call delay timer, to close the TCP connection.
+	call Timer_delay.startOneShot(2000);
+
   }
+
+//Delay timer used to close the TCP connection.
+event void Timer_delay.fired() {
+
+	//close TCP connection.
+	call Tcp.close();	
+}
 
   int http_state;
   int req_verb;
@@ -70,7 +84,11 @@ module HttpdP {
       *tx_buf_len = 100;
       return TRUE;
     }
-    printfUART("rejecting connection\n");
+
+#ifdef PRINTFUART_ENABLED
+    printf("rejecting connection\n");
+#endif
+
     return FALSE;
   }
   event void Tcp.connectDone(error_t e) {
@@ -84,7 +102,7 @@ module HttpdP {
       crlf_pos = 0;
       request = request_buf;
       if (len < 3) {
-        call Tcp.close();
+        //call Tcp.close();
         return;
       }
       if (msg[0] == 'G') {
@@ -126,16 +144,17 @@ module HttpdP {
         // if crlf == 2, we just finished a header line.  you know.  fyi.
         if (crlf_pos == 4) {
           http_state = S_BODY;
-          process_request(req_verb, request_buf, request - request_buf - 1);
+			process_request(req_verb, request_buf, request - request_buf - 1);
           break;
         } 
       }
-    if (crlf_pos < 4) break;
+	break;
+    if (crlf_pos <= 4) break;
 
     case S_BODY:
       // len might be zero here... just a note.
     default:
-      call Tcp.close();
+      //call Tcp.close();
     }
   }
 
