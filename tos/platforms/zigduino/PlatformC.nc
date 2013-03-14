@@ -50,13 +50,14 @@ implementation
 {
   //initialization
   components PlatformP, McuInitC, MeasureClockC;
-  components McuSleepC ;
-  components ZigduinoDigitalPortsC ,ZigduinoAnalogPortsC, ZigduinoUnusedPinsP ;
   Init = PlatformP;
   LedsInit = PlatformP.LedsInit;
   PlatformP.McuInit -> McuInitC;
+  Atm128Calibrate = MeasureClockC;
+
+  components ZigduinoDigitalPortsC ,ZigduinoAnalogPortsC, ZigduinoUnusedPinsP ;
   PlatformP.ZigduinoDigitalInit -> ZigduinoDigitalPortsC ;
   PlatformP.ZigduinoAnalogInit -> ZigduinoAnalogPortsC ;
   PlatformP.ZigduinoUnusedInit -> ZigduinoUnusedPinsP ;
-  Atm128Calibrate = MeasureClockC;
+
 }
