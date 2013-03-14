@@ -63,6 +63,6 @@ configuration Dhcp6ClientC {
   Dhcp6ClientP.IPAddress -> IPAddressC;
   Dhcp6ClientP.Random -> RandomC;
 
-  components LedsC;
+  components NoLedsC as LedsC;
   Dhcp6ClientP.Leds -> LedsC;
 }
