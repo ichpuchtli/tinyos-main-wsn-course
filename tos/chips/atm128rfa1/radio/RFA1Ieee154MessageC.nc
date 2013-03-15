@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, University of Szeged
+ * Copyright (c) 2007, Vanderbilt University
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,34 +30,69 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * Author: Miklos Maroti
- *
- * Modified on 2012/06/01
- * Author: Ugo Colesanti <colesanti@dis.uniroma1.it>
- * Comment: Added Zigduino components for port init
  */
 
-configuration PlatformC
-{
-  provides
-  {
-    interface Init;
-    interface Atm128Calibrate; // TODO: should be moved to McuInitC
-  }
+#include <RadioConfig.h>
 
-  uses interface Init as LedsInit;
+#ifdef TFRAMES_ENABLED
+#error "You cannot use Ieee154MessageC with TFRAMES_ENABLED defined"
+#endif
+
+configuration RFA1Ieee154MessageC
+{
+	provides 
+	{
+		interface SplitControl;
+
+		interface Ieee154Send;
+		interface Receive as Ieee154Receive;
+		interface SendNotifier;
+
+		interface Ieee154Packet;
+		interface Packet;
+		interface Resource as SendResource[uint8_t clint];
+
+		interface PacketAcknowledgements;
+		interface LowPowerListening;
+		interface PacketLink;
+
+		interface RadioChannel;
+
+		interface PacketField<uint8_t> as PacketLinkQuality;
+		interface PacketField<uint8_t> as PacketTransmitPower;
+		interface PacketField<uint8_t> as PacketRSSI;
+
+		interface LocalTime<TRadio> as LocalTimeRadio;
+		interface PacketTimeStamp<TRadio, uint32_t> as PacketTimeStampRadio;
+		interface PacketTimeStamp<TMilli, uint32_t> as PacketTimeStampMilli;
+	}
 }
+
 implementation
 {
-  //initialization
-  components PlatformP, McuInitC, MeasureClockC;
-  Init = PlatformP;
-  LedsInit = PlatformP.LedsInit;
-  PlatformP.McuInit -> McuInitC;
-  Atm128Calibrate = MeasureClockC;
+	components RFA1RadioC;
 
-  components ZigduinoDigitalPortsC ,ZigduinoAnalogPortsC, ZigduinoUnusedPinsP ;
-  PlatformP.ZigduinoDigitalInit -> ZigduinoDigitalPortsC ;
-  PlatformP.ZigduinoAnalogInit -> ZigduinoAnalogPortsC ;
-  PlatformP.ZigduinoUnusedInit -> ZigduinoUnusedPinsP ;
+	SplitControl = RFA1RadioC;
 
+	Ieee154Send = RFA1RadioC.Ieee154Send;
+	Ieee154Receive = RFA1RadioC.Ieee154Receive;
+	SendNotifier = RFA1RadioC.Ieee154Notifier;
+
+	Packet = RFA1RadioC.PacketForIeee154Message;
+	Ieee154Packet = RFA1RadioC;
+	SendResource = RFA1RadioC;
+
+	PacketAcknowledgements = RFA1RadioC;
+	LowPowerListening = RFA1RadioC;
+	PacketLink = RFA1RadioC;
+
+	RadioChannel = RFA1RadioC;
+
+	PacketLinkQuality = RFA1RadioC.PacketLinkQuality;
+	PacketTransmitPower = RFA1RadioC.PacketTransmitPower;
+	PacketRSSI = RFA1RadioC.PacketRSSI;
+
+	LocalTimeRadio = RFA1RadioC;
+	PacketTimeStampMilli = RFA1RadioC;
+	PacketTimeStampRadio = RFA1RadioC;
 }

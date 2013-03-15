@@ -70,32 +70,29 @@ enum
 #endif
 
 /* This is the default value of the CHANNEL field of the PHY_CC_CCA register. */
-//#ifndef RFA1_DEF_CHANNEL
+#ifndef RFA1_DEF_CHANNEL
 #define RFA1_DEF_CHANNEL	11
-//#endif
+#endif
 
 /* The number of microseconds a sending mote will wait for an acknowledgement */
-//#ifndef SOFTWAREACK_TIMEOUT
+#ifndef SOFTWAREACK_TIMEOUT
 #define SOFTWAREACK_TIMEOUT	1000
-//#endif
+#endif
 
 /**
  * This is the timer type of the radio alarm interface
  */
 typedef T62khz TRadio;
-//typedef TMicro TRadio ;
 typedef uint32_t tradio_size;
 
 /**
  * The number of radio alarm ticks per one microsecond
  */
-//#define RADIO_ALARM_MICROSEC	0.0625
-#define RADIO_ALARM_MICROSEC	1
+#define RADIO_ALARM_MICROSEC	0.0625
 
 /**
  * The base two logarithm of the number of radio alarm ticks per one millisecond
  */
-//#define RADIO_ALARM_MILLI_EXP	6
-#define RADIO_ALARM_MILLI_EXP	0
+#define RADIO_ALARM_MILLI_EXP	6
 
 #endif//__RADIOCONFIG_H__

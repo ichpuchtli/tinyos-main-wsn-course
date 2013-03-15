@@ -60,7 +60,7 @@ implementation
   Init = PlatformC.LedsInit;
 
   Led0 = IO.PortB1;
-  Led1 = IO.PortD5;
-  Led2 = IO.PortD6;
+  Led1 = IO.PortD6;
+  Led2 = IO.PortD5;
  
 }

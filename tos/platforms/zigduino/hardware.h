@@ -56,6 +56,4 @@ enum {
 // we have no external pullups
 #define ATM128_I2C_EXTERNAL_PULLDOWN TRUE
 
-//#define PLATFORM_MHZ  1
-
 #endif //HARDWARE_H

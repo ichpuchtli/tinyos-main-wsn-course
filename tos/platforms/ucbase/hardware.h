@@ -57,7 +57,7 @@ enum {
 }; 
  
 #ifndef PLATFORM_BAUDRATE 
-#define PLATFORM_BAUDRATE 57600L
+#define PLATFORM_BAUDRATE 115200L
 #endif
 
 #ifndef SPI_CLOCKRATE

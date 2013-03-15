@@ -48,4 +48,7 @@ implementation
   StdControl = UartC;
   UartStream = UartC;
   UartByte = UartC;
+  
+  components CounterMicro32C;
+  UartC.Counter -> CounterMicro32C;
 }
