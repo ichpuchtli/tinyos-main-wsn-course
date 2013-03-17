@@ -1,12 +1,11 @@
 #include "Timer.h"
+#include "printf.h"
 
 module HttpdP {
   uses {
     interface Leds;
     interface Boot;
     interface Tcp;
- 	interface Timer<TMilli> as Timer_delay;
-
   }
 } implementation {
 
@@ -29,42 +28,26 @@ module HttpdP {
 
   void process_request(int verb, char *request, int len) {
     char reply[24];
-    memcpy(reply, "led0: 0 led1: 0 led2: 0\n", 24);
 
-#ifdef PRINTFUART_ENABLED
+
     printf("request: '%s'\n", request);
-#endif
 
-    if (len >= 10 &&
-        request[0] == '/' &&
-        request[1] == 'r' &&
-        request[2] == 'e' &&
-        request[3] == 'a' &&
-        request[4] == 'd' &&
-        request[5] == '/') {
-      if (request[6] == 'l' &&
-          request[7] == 'e' &&
-          request[8] == 'd' &&
-          request[9] == 's') {
-        uint8_t bitmap = call Leds.get();
-        call Tcp.send(http_okay, http_okay_len);
-        if (bitmap & 1) reply[6] = '1';
-        if (bitmap & 2) reply[14] = '1';
-        if (bitmap & 4) reply[22] = '1';
-        call Tcp.send(reply, 24);
-      }
+    if (strncmp(request, "/read/leds", 10) == 0) {
+      uint8_t bitmap = call Leds.get();
+      call Tcp.send(http_okay, http_okay_len);
+
+      memcpy(reply, "led0: 0 led1: 0 led2: 0\n", 24);
+      if (bitmap & 1) reply[6] = '1';
+      if (bitmap & 2) reply[14] = '1';
+      if (bitmap & 4) reply[22] = '1';
+      call Tcp.send(reply, 24);
+    } else {
+      memcpy(reply, "unknown request\n", 16);
+      call Tcp.send(reply, 16);
     }
-     //Call delay timer, to close the TCP connection.
-	call Timer_delay.startOneShot(2000);
+    call Tcp.close();
 
   }
-
-//Delay timer used to close the TCP connection.
-event void Timer_delay.fired() {
-
-	//close TCP connection.
-	call Tcp.close();	
-}
 
   int http_state;
   int req_verb;
@@ -85,7 +68,7 @@ event void Timer_delay.fired() {
       return TRUE;
     }
 
-#ifdef PRINTFUART_ENABLED
+#ifdef BLIP_PRINTF_ENABLED
     printf("rejecting connection\n");
 #endif
 
@@ -102,7 +85,7 @@ event void Timer_delay.fired() {
       crlf_pos = 0;
       request = request_buf;
       if (len < 3) {
-        //call Tcp.close();
+        call Tcp.close();
         return;
       }
       if (msg[0] == 'G') {
@@ -154,13 +137,11 @@ event void Timer_delay.fired() {
     case S_BODY:
       // len might be zero here... just a note.
     default:
-      //call Tcp.close();
+      call Tcp.close();
     }
   }
 
   event void Tcp.closed(error_t e) {
-    call Leds.led2Toggle();
-
     call Tcp.bind(80);
     http_state = S_IDLE;
   }
