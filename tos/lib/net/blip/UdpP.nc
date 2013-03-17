@@ -68,7 +68,7 @@ module UdpP {
     uint16_t my_cksum, rx_cksum = ntohs(udph->chksum);
     struct ip_iovec v;
 
-    printf("UDP - IP.recv: len: %i (%i, %i) srcport: %u dstport: %u\n",
+    blip_printf("UDP - IP.recv: len: %i (%i, %i) srcport: %u dstport: %u\n",
         ntohs(iph->ip6_plen), len, ntohs(udph->len),
         ntohs(udph->srcport), ntohs(udph->dstport));
 
@@ -89,12 +89,12 @@ module UdpP {
     v.iov_next = NULL;
 
     my_cksum = msg_cksum(iph, &v, IANA_UDP);
-    printf("rx_cksum: 0x%x my_cksum: 0x%x\n", rx_cksum, my_cksum);
+    blip_printf("rx_cksum: 0x%x my_cksum: 0x%x\n", rx_cksum, my_cksum);
     if (rx_cksum != my_cksum) {
       BLIP_STATS_INCR(stats.cksum);
-      printf("udp ckecksum computation failed: mine: 0x%x theirs: 0x%x [0x%x]\n", 
+      blip_printf("udp ckecksum computation failed: mine: 0x%x theirs: 0x%x [0x%x]\n", 
                  my_cksum, rx_cksum, len);
-      printf_buf((void *)iph, sizeof(struct ip6_hdr));
+      blip_printf_buf((void *)iph, sizeof(struct ip6_hdr));
       // iov_print(&v);
       // drop
       return;

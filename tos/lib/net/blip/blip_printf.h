@@ -9,12 +9,15 @@
  * Also include utility functions for dumping several blip structures.
  */
 
-#ifdef PRINTFUART_ENABLED
+#ifdef BLIP_PRINTF_ENABLED
 #include "printf.h"
 #include <lib6lowpan/iovec.h>
 #include <lib6lowpan/ip.h>
 
-void printf_buf(uint8_t *buf, int len) {
+#define blip_printf printf
+#define blip_printfflush() printfflush();
+
+void blip_printf_buf(uint8_t *buf, int len) {
   int i;
   for (i = 0; i < len; i++) {
     printf("%02x ", buf[i]);
@@ -23,7 +26,7 @@ void printf_buf(uint8_t *buf, int len) {
 }
 
 /* printf a whole iovec */
-void iov_print(struct ip_iovec *iov) {
+void blip_iov_print(struct ip_iovec *iov) {
   struct ip_iovec *cur = iov;
   while (cur != NULL) {
     int i;
@@ -37,13 +40,13 @@ void iov_print(struct ip_iovec *iov) {
 }
 
 /* printf an internet address */
-void printf_in6addr(struct in6_addr *a) {
+void blip_printf_in6addr(struct in6_addr *a) {
   static char print_buf[64];
   inet_ntop6(a, print_buf, 64);
   printf(print_buf);
 }
 
-int printf_ieee154addr(ieee154_addr_t *in) {
+int blip_printf_ieee154addr(ieee154_addr_t *in) {
   int i;
   switch (in->ieee_mode) {
   case IEEE154_ADDR_SHORT:
@@ -63,7 +66,7 @@ int printf_ieee154addr(ieee154_addr_t *in) {
 }
 
 
-#else  /* PRINTFUART_ENABLED */
+#else  /* BLIP_PRINTF_ENABLED */
 #if defined (_H_msp430hardware_h) || defined (_H_atmega128hardware_H)
   #include <stdio.h>
 #else
@@ -76,12 +79,12 @@ int printf_ieee154addr(ieee154_addr_t *in) {
 #undef putchar
 
 /* disable all printfs by removing them in the preprocessor */
-#define printf(fmt, args ...) ;
-#define printfflush() ;
-#define printf_in6addr(a) ;
-#define printf_buf(buf, len) ;
-#define iov_print(iov) ;
+#define blip_printf(fmt, args ...) ;
+#define blip_printfflush() ;
+#define blip_printf_in6addr(a) ;
+#define blip_printf_buf(buf, len) ;
+#define blip_iov_print(iov) ;
 
-#endif /* PRINTFUART_ENABLED */
+#endif /* BLIP_PRINTF_ENABLED */
 
 #endif

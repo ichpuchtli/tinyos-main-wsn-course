@@ -30,7 +30,7 @@ module IPForwardingEngineP {
     interface IPPacket;
     interface Pool<struct in6_iid>;
 
-#ifdef PRINTFUART_ENABLED
+#ifdef BLIP_PRINTF_ENABLED
     interface Timer<TMilli> as PrintTimer;
 #endif
     interface Leds;
@@ -196,14 +196,14 @@ module IPForwardingEngineP {
     struct route_entry *next_hop_entry = 
       call ForwardingTable.lookupRoute(pkt->ip6_hdr.ip6_dst.s6_addr, 128);
     
-#ifdef PRINTFUART_ENABLED
+#ifdef BLIP_PRINTF_ENABLED
     if (!call PrintTimer.isRunning())
       call PrintTimer.startPeriodic(10000);
 #endif
 
     if (call IPAddress.isLocalAddress(&pkt->ip6_hdr.ip6_dst) && 
         pkt->ip6_hdr.ip6_dst.s6_addr[0] != 0xff) {
-      printf("Forwarding -- send with local unicast address!\n");
+      blip_printf("Forwarding -- send with local unicast address!\n");
       return FAIL;
     } else if (call IPAddress.isLLAddress(&pkt->ip6_hdr.ip6_dst) &&
                (!next_hop_entry || next_hop_entry->prefixlen < 128)) {
@@ -218,9 +218,9 @@ module IPForwardingEngineP {
          addressed don't work on other links...  we should probably do
          ND in this case, or at least keep a cache so we can reply to
          messages on the right interface. */
-      printf("Forwarding -- send to LL address:");
-      printf_in6addr(&pkt->ip6_hdr.ip6_dst);
-      printf("\n");
+      blip_printf("Forwarding -- send to LL address:");
+      blip_printf_in6addr(&pkt->ip6_hdr.ip6_dst);
+      blip_printf("\n");
       pkt->ip6_hdr.ip6_hlim = 1;
       // only do this for unicast packets
       if (pkt->ip6_hdr.ip6_dst.s6_addr[0] != 0xff) {
@@ -229,7 +229,7 @@ module IPForwardingEngineP {
         return call IPForward.send[ROUTE_IFACE_154](&pkt->ip6_hdr.ip6_dst, pkt, NULL);
       }
     } else if (next_hop_entry) {
-      printf("Forwarding -- got from routing table\n");
+      blip_printf("Forwarding -- got from routing table\n");
 
       /* control messages do not need routing headers */
       if (!(signal ForwardingEvents.initiate[next_hop_entry->ifindex](pkt,
@@ -263,7 +263,7 @@ module IPForwardingEngineP {
 
     if (call IPAddress.isLocalAddress(&iph->ip6_dst)) {
       /* local delivery */
-      // printf("Local delivery\n");
+      // blip_printf("Local delivery\n");
       signal IP.recv(iph, payload, len, meta);
     } else {
       /* forwarding */
@@ -316,7 +316,7 @@ module IPForwardingEngineP {
     struct in6_iid *iid = (struct in6_iid *)status->upper_data;
     memset(next.s6_addr, 0, 16);
     next.s6_addr16[0] = htons(0xfe80);
-    printf("sendDone: iface: %i key: %p\n", ifindex, iid);
+    blip_printf("sendDone: iface: %i key: %p\n", ifindex, iid);
 
     if (iid != NULL) {
       memcpy(&next.s6_addr[8], iid->data, 8);
@@ -325,20 +325,20 @@ module IPForwardingEngineP {
     }
   }
 
-#ifdef PRINTFUART_ENABLED
+#ifdef BLIP_PRINTF_ENABLED
   event void PrintTimer.fired() {
     int i;
-    printf("\ndestination                 gateway            interface\n");
+    blip_printf("\ndestination                 gateway            interface\n");
     for (i = 0; i < ROUTE_TABLE_SZ; i++) {
       if (routing_table[i].valid) {
-        printf_in6addr(&routing_table[i].prefix);
-        printf("/%i\t\t", routing_table[i].prefixlen);
-        printf_in6addr(&routing_table[i].next_hop);
-        printf("\t\t%i\n", routing_table[i].ifindex);
+        blip_printf_in6addr(&routing_table[i].prefix);
+        blip_printf("/%i\t\t", routing_table[i].prefixlen);
+        blip_printf_in6addr(&routing_table[i].next_hop);
+        blip_printf("\t\t%i\n", routing_table[i].ifindex);
       }
     }
-    printf("\n");
-    printfflush();
+    blip_printf("\n");
+    blip_printfflush();
   }
 #endif
 

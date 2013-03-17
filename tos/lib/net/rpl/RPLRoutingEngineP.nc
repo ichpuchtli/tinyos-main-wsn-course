@@ -185,7 +185,7 @@ implementation{
 /*       return; */
 
     if ((!running)  || (!hasDODAG) /* || ((redunCounter < DIORedun) && (DIORedun != 0xFF))*/ ) {
-      // printf("RPL: NoTxDIO %d %d %d\n", redunCounter, DIORedun, hasDODAG);
+      // blip_printf("RPL: NoTxDIO %d %d %d\n", redunCounter, DIORedun, hasDODAG);
       return; 
     }
 
@@ -295,11 +295,11 @@ implementation{
       pkt.ip6_data = &v[0];		
     }
     
-    // printf("RPL: \n >>>>>> TxDIO etx %d %d %d %lu \n", 
+    // blip_printf("RPL: \n >>>>>> TxDIO etx %d %d %d %lu \n", 
     //         call RPLRankInfo.getEtx(), 
     //         ntohs(DODAGID.s6_addr16[7]), msg.dagRank, tricklePeriod);
-    printf("RPL: TXDIO %d %lu \n", TOS_NODE_ID, ++countdio);
-    // printf("RPL: RANK %d %d %d\n", 
+    blip_printf("RPL: TXDIO %d %lu \n", TOS_NODE_ID, ++countdio);
+    // blip_printf("RPL: RANK %d %d %d\n", 
     //        call RPLRankInfo.getRank(&ADDR_MY_IP),
     //        call RPLRankInfo.getEtx(), 
     //        call RPLRankInfo.hasParent());
@@ -346,8 +346,8 @@ implementation{
     call IPAddress.getLLAddr(&pkt.ip6_hdr.ip6_src);
     //call IPAddress.getGlobalAddr(&pkt.ip6_hdr.ip6_src);
 
-    // printf("RPL: \n >>>>>> TxDIS\n");
-    // printf("RPL: >> sendDIS %d %lu \n", TOS_NODE_ID, ++countdis);
+    // blip_printf("RPL: \n >>>>>> TxDIS\n");
+    // blip_printf("RPL: >> sendDIS %d %lu \n", TOS_NODE_ID, ++countdis);
 
     call IP_DIS.send(&pkt);
   }
@@ -443,7 +443,7 @@ implementation{
     DIORedun = Redun;
     MaxRankInc = RankInc;
     MinHopRankInc = HopRankInc;
-    // printf("RPL: Config %d %d %d %d %d \n", 
+    // blip_printf("RPL: Config %d %d %d %d %d \n", 
     //        IntDouble, IntMin, Redun, RankInc, HopRankInc);
   }
 
@@ -498,7 +498,7 @@ implementation{
 
   /********************* StdControl *********************/
   command error_t StdControl.start() {
-    // printf("RPL: STARTING\n");
+    // blip_printf("RPL: STARTING\n");
     if (!running) {
       post init();
       call RankControl.start();
@@ -519,7 +519,7 @@ implementation{
   }
 
   event void IncreaseVersionTimer.fired() {
-    // printf("RPL: >>>> Version Increase!! \n");
+    // blip_printf("RPL: >>>> Version Increase!! \n");
     DODAGVersionNumber++;
     call RPLRouteInfo.resetTrickle();
   }
@@ -553,7 +553,7 @@ implementation{
    */
   event void IP_DIS.recv(struct ip6_hdr *iph, void *payload, 
                          size_t len, struct ip6_metadata *meta) {
-    // printf("RPL: Receiving DIS %d\n", TOS_NODE_ID);
+    // blip_printf("RPL: Receiving DIS %d\n", TOS_NODE_ID);
     if (!running) return;
     // I received a DIS
     if (I_AM_LEAF) {
@@ -594,7 +594,7 @@ implementation{
     if (dio->dagRank == INFINITE_RANK) {
       if ((call RPLRankInfo.getRank(&ADDR_MY_IP) != INFINITE_RANK) && 
           ((call InitDISTimer.getNow()%2) == 1)) { // send DIO if I can help!
-	// printf("RPL: Infinite Rank RX %d\n", TOS_NODE_ID);
+	// blip_printf("RPL: Infinite Rank RX %d\n", TOS_NODE_ID);
 	post sendDIOTask();
       }
       return;
@@ -616,7 +616,7 @@ implementation{
       // If a new DODAGID is reported probably the Rank layer
       // already took care of all the operations and decided to switch to the
       // new DODAGID
-      // printf("RPL: FOUND new dodag %d %d %d\n", 
+      // blip_printf("RPL: FOUND new dodag %d %d %d\n", 
       //        I_AM_LEAF, hasDODAG, compare_ip6_addr(&DODAGID,&dio->dodagID));
       hasDODAG = TRUE;
       // assume that this DIO is from the DODAG with the
@@ -631,7 +631,7 @@ implementation{
       // sequence number has changed - new iteration; restart the
       // trickle timer and configure DIO with new sequence number
       
-      // printf("RPL: New iteration %d %d %d\n", 
+      // blip_printf("RPL: New iteration %d %d %d\n", 
       //        dio->instance_id.id, dio->version, I_AM_LEAF);
       DODAGVersionNumber = dio->version;
       call RPLRouteInfo.resetTrickle();
@@ -642,7 +642,7 @@ implementation{
                node_rank != INFINITE_RANK) {
       /*  inconsistency detected! because rank is not what I
           previously advertised */
-      // printf("RPL: ICD %d\n", node_rank);
+      // blip_printf("RPL: ICD %d\n", node_rank);
       // DO I Still need this?
       if (call RPLRankInfo.getRank(&ADDR_MY_IP) > LOWRANK + MaxRankInc && 
           node_rank != INFINITE_RANK) {
@@ -664,7 +664,7 @@ implementation{
     } else if (!call RPLRankInfo.hasParent() && !I_AM_ROOT) {
       /*  this else if can lead to errors!! */
       /*  I have no parent at this point! */
-      // printf("RPL: noparent %d %d\n", node_rank, call RPLRankInfo.hasParent());
+      // blip_printf("RPL: noparent %d %d\n", node_rank, call RPLRankInfo.hasParent());
       hasDODAG = FALSE;
       GROUND_STATE = dio->flags & DIO_GROUNDED_MASK;
       //GROUND_STATE = dio->flags.flags_element.grounded;
@@ -675,7 +675,7 @@ implementation{
     }
     return;
   accept_dodag:
-    // printf("RPL: new dodag \n");
+    // blip_printf("RPL: new dodag \n");
     // assume that this DIO is from the DODAG with the
     // highest preference and is the preferred parent's DIO packet?
     hasDODAG = TRUE;

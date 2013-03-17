@@ -56,7 +56,7 @@ module PppRouterP {
   event void Boot.booted() {
     error_t rc;
 
-#ifndef PRINTFUART_ENABLED
+#ifndef BLIP_PRINTF_ENABLED
     rc = call Ipv6LcpAutomaton.open();
     rc = call PppControl.start();
 #endif

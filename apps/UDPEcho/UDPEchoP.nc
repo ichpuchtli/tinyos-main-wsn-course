@@ -97,7 +97,7 @@ module UDPEchoP {
 
   event void Echo.recvfrom(struct sockaddr_in6 *from, void *data, 
                            uint16_t len, struct ip6_metadata *meta) {
-#ifdef PRINTFUART_ENABLED
+#ifdef BLIP_PRINTF_ENABLED
     int i;
     uint8_t *cur = data;
     call Leds.led0Toggle();

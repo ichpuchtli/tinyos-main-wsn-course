@@ -91,7 +91,7 @@ configuration IPStackC {
   components Dhcp6ClientC;
 #endif
 
-#ifdef PRINTFUART_ENABLED
+#ifdef BLIP_PRINTF_ENABLED
   components new TimerMilliC();
   FwdP.PrintTimer -> TimerMilliC;
 #endif

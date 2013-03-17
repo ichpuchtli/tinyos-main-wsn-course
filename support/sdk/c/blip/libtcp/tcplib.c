@@ -38,6 +38,8 @@
 #include "libtcp/tcplib.h"
 #include "libtcp/circ.h"
 
+#include "blip_printf.h"
+
 static struct tcplib_sock *conns = NULL;
 
 #define ONE_SEGMENT(X)  ((X)->mss)
@@ -105,7 +107,7 @@ static struct tcplib_sock *conn_lookup(struct ip6_hdr *iph,
   // print_headers(iph, tcph);
   for (iter = conns; iter != NULL; iter = iter->next) {
     // print_conn(iter);
-    printf("conn lport: %i\n", ntohs(iter->l_ep.sin6_port));
+    blip_printf("conn lport: %i\n", ntohs(iter->l_ep.sin6_port));
     if (((memcmp(iph->ip6_dst.s6_addr, iter->l_ep.sin6_addr.s6_addr, 16) == 0) ||
          isInaddrAny(&iter->l_ep.sin6_addr)) &&
         tcph->dstport == iter->l_ep.sin6_port &&
@@ -163,7 +165,7 @@ static void __tcplib_send(struct tcplib_sock *sock,
   sock->flags &= ~TCP_ACKPENDING;
   // sock->ackno = ntohl(tcph->ackno);
 
-  printf("srcprt: %hu dstprt: %hu\n", ntohs(sock->l_ep.sin6_port), 
+  blip_printf("srcprt: %hu dstprt: %hu\n", ntohs(sock->l_ep.sin6_port), 
          ntohs(sock->r_ep.sin6_port));
 
   tcph->srcport = sock->l_ep.sin6_port;
@@ -178,7 +180,7 @@ static void __tcplib_send(struct tcplib_sock *sock,
 
 static void tcplib_send_ack(struct tcplib_sock *sock, int fin_seqno, uint8_t flags) {
   struct ip6_packet *msg = get_ipmsg(0);
-  printf("sending ACK\n");
+  blip_printf("sending ACK\n");
       
   if (msg != NULL) {
     struct tcp_hdr *tcp_rep = (struct tcp_hdr *)(msg + 1);
@@ -188,11 +190,11 @@ static void tcplib_send_ack(struct tcplib_sock *sock, int fin_seqno, uint8_t fla
     tcp_rep->seqno = htonl(sock->seqno);
     tcp_rep->ackno = htonl(sock->ackno +
                            (fin_seqno ? 1 : 0));
-    printf("sending ACK seqno: %u ackno: %u\n", ntohl(tcp_rep->seqno), ntohl(tcp_rep->ackno));
+    blip_printf("sending ACK seqno: %u ackno: %u\n", ntohl(tcp_rep->seqno), ntohl(tcp_rep->ackno));
     __tcplib_send(sock, msg);
     ip_free(msg);
   } else {
-    printf("Could not send ack-- no memory!\n");
+    blip_printf("Could not send ack-- no memory!\n");
   }
 }
 
@@ -229,7 +231,7 @@ static int tcplib_output(struct tcplib_sock *sock, uint32_t sseqno) {
   // conjestion window.  of course, if we have less data we send even
   // less.
   int seg_size = min(sock->seqno - sseqno, sock->r_wind);
-  printf("r_wind: %i\n", sock->r_wind);
+  blip_printf("r_wind: %i\n", sock->r_wind);
   seg_size = min(seg_size, sock->cwnd);
   while (seg_size > 0 && sock->seqno > sseqno) {
     // printf("sending seg_size: %i\n", seg_size);
@@ -244,12 +246,12 @@ static int tcplib_output(struct tcplib_sock *sock, uint32_t sseqno) {
     tcph->seqno = htonl(sseqno);
     tcph->ackno = htonl(sock->ackno);
 
-    printf("tcplib_output: seqno: %u ackno: %u len: %i headno: %u\n",
+    blip_printf("tcplib_output: seqno: %u ackno: %u len: %i headno: %u\n",
            ntohl(tcph->seqno), ntohl(tcph->ackno), seg_size,
            circ_get_seqno(sock->tx_buf));
 
     if (seg_size != circ_buf_read(sock->tx_buf, sseqno, data, seg_size)) {
-      printf("WARN: circ could not read!\n");
+      blip_printf("WARN: circ could not read!\n");
     }
     __tcplib_send(sock, msg);
     ip_free(msg);
@@ -318,7 +320,7 @@ int tcplib_process(struct ip6_hdr *iph, void *payload) {
     if (tcph->flags & TCP_FLAG_RST) {
       /* Really hose this connection if we get a RST packet.
        * still TODO: RST generation for unbound ports */
-      printf("connection reset by peer\n");
+      blip_printf("connection reset by peer\n");
           
       tcplib_extern_closedone(this_conn);
       // tcplib_init_sock(this_conn);
@@ -328,7 +330,7 @@ int tcplib_process(struct ip6_hdr *iph, void *payload) {
     // TODO : this should be after we detect out-of-sequence ACK
     // numbers!
     this_conn->r_wind = ntohs(tcph->window);
-    printf("State: %i\n", this_conn->state);
+    blip_printf("State: %i\n", this_conn->state);
 
     switch (this_conn->state) {
     case TCP_LAST_ACK:
@@ -340,7 +342,7 @@ int tcplib_process(struct ip6_hdr *iph, void *payload) {
         break;
       }
     case TCP_FIN_WAIT_1:
-      printf("IN FIN_WAIT_1, %i\n", (tcph->flags & TCP_FLAG_FIN));
+      blip_printf("IN FIN_WAIT_1, %i\n", (tcph->flags & TCP_FLAG_FIN));
       if (tcph->flags & TCP_FLAG_ACK && 
           hdr_ackno == this_conn->seqno + 1) {
         if (tcph->flags & TCP_FLAG_FIN) {
@@ -382,7 +384,7 @@ int tcplib_process(struct ip6_hdr *iph, void *payload) {
         this_conn->state = TCP_SYN_RCVD;
         connect_done = 1;
       } else {
-        printf("sending RST on bad data in state SYN_SENT\n");
+        blip_printf("sending RST on bad data in state SYN_SENT\n");
         // we'll just let the timeout eventually close the socket, though
         tcplib_send_rst(iph, tcph);
         break;
@@ -455,8 +457,8 @@ int tcplib_process(struct ip6_hdr *iph, void *payload) {
 
 
         // receive side sequence check and add data
-        printf("seqno: %u ackno: %u\n", hdr_seqno, hdr_ackno);
-        printf("conn seqno: %u ackno: %u\n", this_conn->seqno, this_conn->ackno);
+        blip_printf("seqno: %u ackno: %u\n", hdr_seqno, hdr_ackno);
+        blip_printf("conn seqno: %u ackno: %u\n", this_conn->seqno, this_conn->ackno);
 
 
         // send side recieve sequence check and congestion window updates.
@@ -494,7 +496,7 @@ int tcplib_process(struct ip6_hdr *iph, void *payload) {
           // a "dup ack count" of 2 is really 3 total acks because we start with zero
           if (GET_ACK_COUNT(this_conn->flags) == 2) {
             UNSET_ACK_COUNT(this_conn->flags);
-            printf("detected multiple duplicate ACKs-- doing fast retransmit [%u, %u]\n",
+            blip_printf("detected multiple duplicate ACKs-- doing fast retransmit [%u, %u]\n",
                    circ_get_seqno(this_conn->tx_buf),
                    this_conn->seqno);
 
@@ -508,7 +510,7 @@ int tcplib_process(struct ip6_hdr *iph, void *payload) {
         }
 
         if (hdr_seqno != this_conn->ackno) {
-          printf("==> received forward segment\n");
+          blip_printf("==> received forward segment\n");
           if ((hdr_seqno > this_conn->ackno + this_conn->my_wind) ||
               (hdr_seqno < this_conn->ackno - this_conn->my_wind)) {
             // send a RST on really wild data 
@@ -518,7 +520,7 @@ int tcplib_process(struct ip6_hdr *iph, void *payload) {
             this_conn->flags |= TCP_ACKSENT;
           }
         } else { // (hdr_seqno == this_conn->ackno) {
-          printf("receive data [%li]\n", len - sizeof(struct ip6_hdr));
+          blip_printf("receive data [%li]\n", len - sizeof(struct ip6_hdr));
 
           if (receive_data(this_conn, tcph, len - sizeof(struct ip6_hdr)) > 0 &&
               this_conn->flags & TCP_ACKSENT) {
@@ -559,7 +561,7 @@ int tcplib_process(struct ip6_hdr *iph, void *payload) {
   } else {
     /* this_conn was NULL */
     /* interestingly, TCP sends a RST on this condition, not an ICMP error.  go figure. */
-    printf("sending rst on missing connection\n");
+    blip_printf("sending rst on missing connection\n");
     tcplib_send_rst(iph, tcph);
 
   }
@@ -644,7 +646,7 @@ void tcplib_retx_expire(struct tcplib_sock *sock) {
   switch (sock->state) {
   case TCP_ESTABLISHED:
     if (circ_get_seqno(sock->tx_buf) != sock->seqno) {
-      printf("retransmitting [%u, %u]\n", circ_get_seqno(sock->tx_buf),
+      blip_printf("retransmitting [%u, %u]\n", circ_get_seqno(sock->tx_buf),
              sock->seqno);
       reset_ssthresh(sock);
       // restart slow start

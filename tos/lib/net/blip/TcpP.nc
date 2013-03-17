@@ -72,7 +72,7 @@ module TcpP {
                                     struct sockaddr_in6 *from) {
     int cid = find_client(conn);
 
-    printf("tcplib_accept: cid: %i\n", cid);
+    blip_printf("tcplib_accept: cid: %i\n", cid);
 
     if (cid == N_CLIENTS) return NULL;
     if (signal Tcp.accept[cid](from, &conn->tx_buf, &conn->tx_buf_len)) {
@@ -83,7 +83,7 @@ module TcpP {
   }
 
   void tcplib_send_out(struct ip6_packet *msg, struct tcp_hdr *tcph) {
-    printf("tcp output\n");
+    blip_printf("tcp output\n");
     call IPAddress.setSource(&msg->ip6_hdr);
     tcph->chksum = htons(msg_cksum(&msg->ip6_hdr, msg->ip6_data, IANA_TCP));
     call IP.send(msg);
@@ -109,7 +109,7 @@ module TcpP {
                      void *payload, size_t len,
                      struct ip6_metadata *meta) {
     
-    printf("tcp packet received\n");
+    blip_printf("tcp packet received\n");
     tcplib_process(iph, payload);
   }
 
@@ -137,6 +137,7 @@ module TcpP {
   }
   
   command error_t Tcp.close[uint8_t client]() {
+    tcplib_timer_process();
     if (!tcplib_close(&socks[client]))
       return SUCCESS;
     return FAIL;

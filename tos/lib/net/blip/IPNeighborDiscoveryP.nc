@@ -98,25 +98,25 @@ module IPNeighborDiscoveryP {
     fr_addr.ieee_dstpan = call Ieee154Address.getPanId();
     call IPAddress.getLLAddr(&local_addr);
 
-    printf("IPNeighborDiscovery - send - next: ");
-    printf_in6addr(next);
-    printf(" - ll source: ");
-    printf_in6addr(&local_addr);
-    printf("\n");
-    // iov_print(msg->ip6_data);
+    blip_printf("IPNeighborDiscovery - send - next: ");
+    blip_printf_in6addr(next);
+    blip_printf(" - ll source: ");
+    blip_printf_in6addr(&local_addr);
+    blip_printf("\n");
+    // blip_iov_print(msg->ip6_data);
 
     if (call NeighborDiscovery.resolveAddress(&local_addr, &fr_addr.ieee_src) != SUCCESS) {
-      printf("IPND - local address resolution failed\n");
+      blip_printf("IPND - local address resolution failed\n");
       return FAIL;
     }
 
     if (call NeighborDiscovery.resolveAddress(next, &fr_addr.ieee_dst) != SUCCESS) {
-      printf("IPND - next-hop address resolution failed\n");
+      blip_printf("IPND - next-hop address resolution failed\n");
       return FAIL;
     }
-    printf("l2 source: "); printf_buf(fr_addr.ieee_src.i_laddr.data, 8);
-    printf("l2 dest: "); printf_buf(fr_addr.ieee_dst.i_laddr.data, 8);
-    printf("\n");
+    blip_printf("l2 source: "); blip_printf_buf(fr_addr.ieee_src.i_laddr.data, 8);
+    blip_printf("l2 dest: "); blip_printf_buf(fr_addr.ieee_dst.i_laddr.data, 8);
+    blip_printf("\n");
 
     return call IPLower.send(&fr_addr, msg, ptr);
   }

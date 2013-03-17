@@ -79,7 +79,7 @@ configuration UDPEchoC {
   components DhcpCmdC;
 #endif
 
-#ifdef PRINTFUART_ENABLED
+#ifdef BLIP_PRINTF_ENABLED
   /* This component wires printf directly to the serial port, and does
    * not use any framing.  You can view the output simply by tailing
    * the serial device.  Unlike the old printfUART, this allows us to

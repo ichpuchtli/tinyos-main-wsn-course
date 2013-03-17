@@ -58,9 +58,6 @@ configuration TCPEchoC {
   HttpdP.Boot -> MainC;
   HttpdP.Leds -> LedsC;
   HttpdP.Tcp -> TcpWeb;
-
-  components new TimerMilliC() as Timer_delay;
-  HttpdP.Timer_delay -> Timer_delay;
 	
   TCPEchoP.Status -> Status;
 
@@ -93,19 +90,8 @@ configuration TCPEchoC {
   components DhcpCmdC;
 #endif
 
-#ifdef PRINTFUART_ENABLED
-  /* This component wires printf directly to the serial port, and does
-   * not use any framing.  You can view the output simply by tailing
-   * the serial device.  Unlike the old printfUART, this allows us to
-   * use PlatformSerialC to provide the serial driver.
-   * 
-   * For instance:
-   * $ stty -F /dev/ttyUSB0 115200
-   * $ tail -f /dev/ttyUSB0
-  */
-  components SerialPrintfC;
 
-#endif
+components SerialPrintfC;
 
 
 }
