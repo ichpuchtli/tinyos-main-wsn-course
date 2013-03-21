@@ -17,6 +17,10 @@ module PppRouterP {
     interface Leds;
     interface SplitControl as IPControl;
     interface SplitControl as PppControl;
+    #ifdef TIMESYNC_ENABLED
+    interface StdControl as TimeSyncControl;
+    #endif
+
     interface LcpAutomaton as Ipv6LcpAutomaton;
     interface PppIpv6;
     interface Ppp;
@@ -50,6 +54,11 @@ module PppRouterP {
 
     // add a default route through the PPP link
     call ForwardingTable.addRoute(NULL, 0, NULL, ROUTE_IFACE_PPP);
+    
+    #ifdef TIMESYNC_ENABLED
+    // start timesync service
+    call TimeSyncControl.start();
+    #endif
   }
   event void IPControl.stopDone (error_t error) { }
 

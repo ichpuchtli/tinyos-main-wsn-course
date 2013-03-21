@@ -67,4 +67,11 @@ configuration PppRouterC {
   components Dhcp6ClientC;
   PppRouterP.Dhcp6Info -> Dhcp6ClientC;
 #endif
+
+  #ifdef TIMESYNC_ENABLED
+  components TimeSyncC;
+  PppRouterP.TimeSyncControl -> TimeSyncC;
+  MainC.SoftwareInit -> TimeSyncC;
+  #endif
+
 }
