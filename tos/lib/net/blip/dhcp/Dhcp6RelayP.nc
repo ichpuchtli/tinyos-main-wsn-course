@@ -105,7 +105,7 @@ module Dhcp6RelayP {
                           uint16_t len, struct ip6_metadata *meta) {
     struct dh6_header *hdr = payload;
     uint16_t type = ntohl(hdr->dh6_type_txid) >> 24;
-    printf("relay agent RX!: %i\n", type);
+    blip_printf("relay agent RX!: %i\n", type);
 
     if (!m_alive) return;
     
@@ -124,7 +124,7 @@ module Dhcp6RelayP {
         m_src = (struct sockaddr_in6 *)m_msg;
 
         if ((m_len = setup(req, DH6_ADVERTISE, ntohl(hdr->dh6_type_txid) & 0xffffff )) < 0) {
-          printf("DHCP Message construction faild\n");
+          blip_printf("DHCP Message construction faild\n");
           free(m_msg);
           return;
         }
