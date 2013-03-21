@@ -33,6 +33,9 @@
  */
 
 configuration ZigduinoDigitalPortsC {
+
+  provides interface GeneralIO as DigitalPin[uint8_t];
+
   provides interface GeneralIO as Digital0 ;
   provides interface GeneralIO as Digital1 ;
   provides interface GeneralIO as Digital2 ;
@@ -82,6 +85,21 @@ implementation {
   Digital11 = IO.PortB2 ;
   Digital12 = IO.PortB3 ;
   Digital13 = IO.PortB1 ;
+
+  DigitalPin[0] = IO.PortD2;
+  DigitalPin[1] = IO.PortD3;
+  DigitalPin[2] = IO.PortE6;
+  DigitalPin[3] = IO.PortE5;
+  DigitalPin[4] = IO.PortE2;
+  DigitalPin[5] = IO.PortE3;
+  DigitalPin[6] = IO.PortE4;
+  DigitalPin[7] = IO.PortE7;
+  DigitalPin[8] = IO.PortB4;
+  DigitalPin[9] = IO.PortB7;
+  DigitalPin[10] = IO.PortB6;
+  DigitalPin[11] = IO.PortB2;
+  DigitalPin[12] = IO.PortB3;
+  DigitalPin[13] = IO.PortB1;
 
   Interrupt0 = AtmegaExtInterruptC.GpioInterrupt[2]; // INT2
   Interrupt1 = AtmegaExtInterruptC.GpioInterrupt[3]; // INT3
