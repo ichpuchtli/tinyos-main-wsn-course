@@ -1,0 +1,4 @@
+COMPONENT=SerialConsoleAppC
+CFLAGS += -I$(TOSDIR)/lib/printf
+include $(MAKERULES)
+

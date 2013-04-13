@@ -1,0 +1,2 @@
+#!/bin/sh
+sudo ifconfig ppp0 add fec0::100/64
