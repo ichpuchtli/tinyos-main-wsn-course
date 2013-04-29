@@ -1,6 +1,6 @@
 
 
-generic configuration LightC(uint8_t channel) {
+generic configuration MicrophoneC(uint8_t channel) {
   provides interface Read<uint16_t>;
 }
 implementation {
