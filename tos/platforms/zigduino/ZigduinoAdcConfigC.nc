@@ -1,4 +1,4 @@
-generic module ZigduinoSingleAdcConfigC(uint8_t channel, uint8_t vref) {
+generic module ZigduinoAdcConfigC(uint8_t channel, uint8_t vref) {
   provides interface Atm128AdcConfig;
 }
 
