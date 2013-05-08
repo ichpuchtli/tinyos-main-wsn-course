@@ -55,7 +55,7 @@ implementation
    * based on their active components, NOT on their values.
    * Look at atm1281hardware.h and page 54 of the ATmeg1281
    * manual (Table 25).*/
-  const_uint8_t atm128PowerBits[ATM128_POWER_DOWN + 1] = {
+  const uint8_t atm128PowerBits[ATM128_POWER_DOWN + 1] = {
     0,	//IDLE
     (1 << SM0),	//ADC_NR
     (1 << SM2) | (1 << SM1) | (1 << SM0),	//EXT_STDBY
